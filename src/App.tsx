@@ -46,7 +46,8 @@ const calculateTotals = (item: Item) => {
     const subtotal = qty * perItem + setup + shipping;
     const profitValue = subtotal * item.profitPercent;
     const total = subtotal + profitValue;
-    return { subtotal, profitValue, total };
+    const pricePerItemWithProfit = qty > 0 ? total / qty : 0;
+    return { subtotal, profitValue, total, pricePerItemWithProfit };
 };
 
 const isBlankNewItem = (item: Item) =>
@@ -150,7 +151,7 @@ function App() {
         }));
     };
 
-    const { subtotal, profitValue, total } = useMemo(
+    const { subtotal, profitValue, total, pricePerItemWithProfit } = useMemo(
         () => calculateTotals(current),
         [current]
     );
@@ -592,6 +593,14 @@ function App() {
                                     <div className="label">Gross profit</div>
                                     <div className="value">
                                         {formatCurrency(profitValue)}
+                                    </div>
+                                </div>
+                                <div className="total-box">
+                                    <div className="label">
+                                        Price per item (with profit)
+                                    </div>
+                                    <div className="value">
+                                        {formatCurrency(pricePerItemWithProfit)}
                                     </div>
                                 </div>
                                 <div className="total-box">
